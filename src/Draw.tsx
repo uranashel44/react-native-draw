@@ -107,6 +107,7 @@ export interface DrawProps {
    * @default DEFAULT_COLORS
    */
   colors?: string[][][];
+  thicknessVal?: number;
 
   /**
    * Initial values for color the brush and paths
@@ -170,6 +171,8 @@ export interface DrawRef {
    */
   setColor: Dispatch<SetStateAction<string>>;
 
+  setThickness: Dispatch<SetStateAction<number>>;
+
   /**
    * Removes all brush strokes
    */
@@ -220,9 +223,9 @@ const getVisibility = (hideBottom: boolean | HideBottom): Visibility => {
           (typeof hideBottom.brushProperties === 'object'
             ? hideBottom.brushProperties
             : {
-                opacity: true,
-                size: true,
-              })),
+              opacity: true,
+              size: true,
+            })),
       },
     };
   }
@@ -237,6 +240,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       buttonStyle,
       onPathsChange,
       height = screenHeight - 80,
+      thicknessVal = 3,
       width = screenWidth,
       brushPreview = 'stroke',
       hideBottom = false,
@@ -439,6 +443,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       undo: handleUndo,
       clear,
       setColor,
+      setThickness: (value) => setThickness(value),
       getPaths: () => paths,
       addPath: (newPath) => {
         setPaths((prev) => [...prev, newPath]);
@@ -516,14 +521,14 @@ const Draw = forwardRef<DrawRef, DrawProps>(
                 <View style={styles.buttonsContainer}>
                   {(!viewVisibility.brushProperties.opacity ||
                     !viewVisibility.brushProperties.size) && (
-                    <Button
-                      onPress={handlePenOnPress}
-                      color="#ddd"
-                      style={buttonStyle}
-                    >
-                      <Brush fill="#ddd" height={30} width={30} />
-                    </Button>
-                  )}
+                      <Button
+                        onPress={handlePenOnPress}
+                        color="#ddd"
+                        style={buttonStyle}
+                      >
+                        <Brush fill="#ddd" height={30} width={30} />
+                      </Button>
+                    )}
                   {!viewVisibility.colorPicker && (
                     <View
                       style={

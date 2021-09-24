@@ -240,7 +240,6 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       buttonStyle,
       onPathsChange,
       height = screenHeight - 80,
-      thicknessVal = 3,
       width = screenWidth,
       brushPreview = 'stroke',
       hideBottom = false,

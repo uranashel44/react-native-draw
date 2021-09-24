@@ -323,7 +323,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     const handleUndo = () => {
       focusCanvas();
       setPaths((list) => list.filter((_i, key) => key !== list.length - 1));
-      setPathsRedo([...pathsRedo, ...(paths.filter((i, k) => paths.length - 1 === k))])
+      setPathsRedo([...pathsRedo, ...(paths.filter((_i, k) => paths.length - 1 === k))])
     };
     const handleRedo = () => {
       if (pathsRedo.length - 1 >= 0) {

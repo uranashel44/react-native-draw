@@ -166,6 +166,8 @@ export interface DrawRef {
    */
   undo: () => void;
 
+  redo: () => void;
+
   /**
    * Change brush color
    */
@@ -267,6 +269,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     const viewVisibility = getVisibility(hideBottom);
 
     const [paths, setPaths] = useState<PathType[]>(initialValues.paths!);
+    const [pathsRedo, setPathsRedo] = useState<PathType[]>(initialValues.paths!);
     const [path, setPath] = useState<PathDataType>([]);
     const [color, setColor] = useState(initialValues.color!);
     const [thickness, setThickness] = useState(initialValues.thickness!);
@@ -320,7 +323,14 @@ const Draw = forwardRef<DrawRef, DrawProps>(
     const handleUndo = () => {
       focusCanvas();
       setPaths((list) => list.filter((_i, key) => key !== list.length - 1));
+      setPathsRedo([...pathsRedo, ...(paths.filter((i, k) => paths.length - 1 === k))])
     };
+    const handleRedo = () => {
+      if (pathsRedo.length - 1 >= 0) {
+        setPaths([...paths, pathsRedo[pathsRedo.length - 1]]);
+        setPathsRedo(pathsRedo.slice(0, pathsRedo.length - 1))
+      }
+    }
     const handleColorPickerSelection = (newColor: string) => {
       setColor(newColor);
       if (autoDismissColorPicker) {
@@ -442,6 +452,7 @@ const Draw = forwardRef<DrawRef, DrawProps>(
       undo: handleUndo,
       clear,
       setColor,
+      redo: handleRedo,
       setThickness: (value) => setThickness(value),
       getPaths: () => paths,
       addPath: (newPath) => {
